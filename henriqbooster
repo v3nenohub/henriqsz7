@@ -1,0 +1,39 @@
+local Lighting = game:GetService("Lighting")
+local Workspace = game:GetService("Workspace")
+local RunService = game:GetService("RunService")
+
+Lighting.GlobalShadows = false
+Lighting.FogEnd = 9e9
+Lighting.Brightness = 1
+
+for i,v in pairs(Lighting:GetChildren()) do
+    if v:IsA("PostEffect") or v:IsA("Sky") or v:IsA("Atmosphere") then
+        v:Destroy()
+    end
+end
+
+Workspace.Terrain.WaterTransparency = 1
+Workspace.Terrain.WaterWaveSize = 0
+Workspace.Terrain.WaterReflectance = 0
+
+for i,v in pairs(Workspace:GetDescendants()) do
+    if v:IsA("ParticleEmitter") or v:IsA("Fire") or v:IsA("Smoke") or v:IsA("Sparkles") or v:IsA("Explosion") or v:IsA("Trail") or v:IsA("Beam") then
+        v.Enabled = false
+    elseif v:IsA("Decal") and not v.Parent:IsA("Model") then
+        v.Transparency = 1
+    elseif v:IsA("BasePart") and not v.Parent:FindFirstChild("Humanoid") and v.Parent.Name ~= "Terrain" then
+        v.Material = Enum.Material.Plastic
+        v.Reflectance = 0
+        v.CastShadow = false
+    end
+end
+
+RunService.Heartbeat:Connect(function()
+    for i,v in pairs(Workspace.CurrentCamera:GetChildren()) do
+        if v:IsA("BlurEffect") or v:IsA("SunRaysEffect") or v:IsA("DepthOfFieldEffect") then
+            v:Destroy()
+        end
+    end
+end)
+
+settings().Rendering.QualityLevel = Enum.QualityLevel.Level01
