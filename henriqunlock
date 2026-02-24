@@ -1,0 +1,21 @@
+local UserInputService = game:GetService("UserInputService")
+local RunService = game:GetService("RunService")
+local StarterGui = game:GetService("StarterGui")
+
+if setfpscap then
+    setfpscap(999)
+elseif game:GetService("RunService"):IsStudio() then
+    game.StarterGui:SetCore("FpsCap", 999)
+end
+
+if UserInputService.TouchEnabled then
+    UserInputService.MaximumNumberOfTouches = 1
+end
+
+StarterGui:SetCore("TopbarEnabled", false)
+
+RunService:BindToRenderStep("UnlockFPS", Enum.RenderPriority.First.Value, function()
+    if Workspace.CurrentCamera then
+        Workspace.CurrentCamera.FieldOfView = math.clamp(Workspace.CurrentCamera.FieldOfView, 70, 120)
+    end
+end)
